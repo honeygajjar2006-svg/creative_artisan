@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>✨ Neon Artisan Interactive</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Raleway&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Raleway', sans-serif;
+            background: linear-gradient(135deg, #1e3c72, #6a0dad);
+            min-height: 100vh;
+            color: #fff;
+            padding: 30px;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            text-align:center;
+            margin-bottom:40px;
+            background: linear-gradient(45deg,#00f0ff,#ff00ff,#ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 5s ease infinite;
+        }
+        @keyframes gradientText {
+            0%{background-position:0% 50%;}
+            50%{background-position:100% 50%;}
+            100%{background-position:0% 50%;}
+        }
+        .form-section {
+            background: rgba(255,255,255,0.05);
+            padding:20px;
+            border-radius:15px;
+            margin-bottom:40px;
+            backdrop-filter:blur(8px);
+        }
+        .form-control, textarea {
+            background: rgba(255,255,255,0.1);
+            border:none;
+            color:#fff;
+        }
+        ::placeholder { color:#ccc; }
+        .btn-custom { 
+            background: linear-gradient(90deg,#00f0ff,#ff00ff);
+            color:#fff; font-weight:bold; transition:0.3s; 
+        }
+        .btn-custom:hover { 
+            background: linear-gradient(90deg,#ff00ff,#00f0ff);
+            color:#ffff00; 
+            transform: scale(1.05);
+        }
+        .card {
+            border-radius:15px;
+            background: rgba(255,255,255,0.05);
+            backdrop-filter:blur(5px);
+            transition:0.3s;
+        }
+        .card:hover {
+            transform: scale(1.03);
+            box-shadow:0 8px 20px rgba(0,255,255,0.5);
+        }
+        .card-title { 
+            color:#00f0ff; 
+            font-weight:700; 
+            transition:0.3s; 
+        }
+        .card-title:hover {
+            color:#ff00ff;
+        }
+        .card p { transition:0.3s; }
+        .card p:hover { color:#ffff00; }
+        .card-img-top { height:200px; object-fit:cover; border-radius:15px 15px 0 0; }
+        .share-btn { font-size:0.9rem; margin-right:5px; transition:0.3s; }
+        .share-btn:hover { color:#ffff00; transform:scale(1.1); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>✨ Neon Artisan Interactive</h1>
+
+    <!-- Form -->
+    <div class="form-section">
+        <form method="POST" action="/add" enctype="multipart/form-data" class="row g-3">
+            <div class="col-md-4"><input type="text" name="name" placeholder="Name" class="form-control" required></div>
+            <div class="col-md-4"><input type="text" name="craft" placeholder="Craft" class="form-control" required></div>
+            <div class="col-md-4"><input type="file" name="image" class="form-control"></div>
+            <div class="col-12"><textarea name="story" placeholder="Share story..." class="form-control" required></textarea></div>
+            <div class="col-12"><button type="submit" class="btn btn-custom">Add Artisan</button></div>
+        </form>
+    </div>
+
+    <!-- Artisans -->
+    <div class="row">
+        {% for artisan in artisans %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if artisan.image %}
+                <img src="{{ url_for('static', filename='../uploads/' + artisan.image) }}" class="card-img-top">
+                {% else %}
+                <img src="https://via.placeholder.com/400x200?text=No+Image" class="card-img-top">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ artisan.name }}</h5>
+                    <p><strong>Craft:</strong> {{ artisan.craft }}</p>
+                    <p>{{ artisan.story }}</p>
+                    <p class="text-info"><em>{{ artisan.description }}</em></p>
+
+                    <!-- Social share -->
+                    <div>
+                        <a target="_blank" href="https://twitter.com/intent/tweet?text={{ artisan.description | urlencode }}" class="btn btn-sm btn-primary share-btn">🐦 Tweet</a>
+                        <a target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://example.com&quote={{ artisan.description | urlencode }}" class="btn btn-sm btn-primary share-btn">📘 Share</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+</body>
+</html>
